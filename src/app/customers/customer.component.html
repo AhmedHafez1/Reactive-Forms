@@ -13,8 +13,6 @@
             id="firstNameId"
             type="text"
             placeholder="First Name (required)"
-            required
-            minlength="3"
             formControlName="firstName"
             [ngClass]="{
               'is-invalid':
@@ -44,8 +42,6 @@
             id="lastNameId"
             type="text"
             placeholder="Last Name (required)"
-            required
-            maxlength="50"
             formControlName="lastName"
             [ngClass]="{
               'is-invalid':
@@ -71,10 +67,7 @@
           <input
             class="form-control"
             id="emailId"
-            type="email"
             placeholder="Email (required)"
-            required
-            email
             formControlName="email"
             [ngClass]="{
               'is-invalid':
@@ -94,6 +87,82 @@
         </div>
       </div>
 
+      <div class="form-group row mb-2">
+        <label class="col-md-2 col-form-label" for="emailId">Phone</label>
+        <div class="col-md-8">
+          <input
+            class="form-control"
+            id="emailId"
+            placeholder="Phone"
+            formControlName="phone"
+            [ngClass]="{
+              'is-invalid':
+                (customerForm.get('phone')?.touched ||
+                  customerForm.get('phone')?.dirty) &&
+                !customerForm.get('phone')?.valid
+            }"
+          />
+          <span class="invalid-feedback">
+            <span *ngIf="customerForm.get('phone')?.errors?.required">
+              Please enter your phone.
+            </span>
+            <span *ngIf="customerForm.get('phone')?.errors?.minlength">
+              Phone number should be at least 8 digits.
+            </span>
+          </span>
+        </div>
+      </div>
+
+      <div class="form-group row mb-2">
+        <label class="col-md-2 col-form-label pt-0">Notification</label>
+        <div class="col-md-8">
+          <div class="form-check form-check-inline">
+            <label class="form-check-label">
+              <input
+                class="form-check-input"
+                type="radio"
+                formControlName="notification"
+                value="text"
+                (click)="setPhoneValidation('text')"
+              />
+              Phone
+            </label>
+          </div>
+          <div class="form-check form-check-inline">
+            <label class="form-check-label">
+              <input
+                class="form-check-input"
+                type="radio"
+                formControlName="notification"
+                value="email"
+                (click)="setPhoneValidation('email')"
+              />
+              Email
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="form-group row mb-2">
+        <div class="col-md-2">
+          <input
+            class="form-control"
+            type="number"
+            placeholder="Rating"
+            formControlName="rating"
+            [ngClass]="{
+              'is-invalid':
+                (customerForm.get('rating')?.touched ||
+                  customerForm.get('rating')?.dirty) &&
+                !customerForm.get('rating')?.valid
+            }"
+          />
+          <span class="invalid-feedback">
+            <span *ngIf="customerForm.get('rating')?.errors?.range">
+              Please enter number between 1 and 5
+            </span>
+          </span>
+        </div>
+      </div>
       <div class="form-group row mb-2">
         <div class="col-md-8">
           <div class="form-check">
