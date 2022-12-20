@@ -72,21 +72,12 @@
               formControlName="email"
               [ngClass]="{
                 'is-invalid':
-                  (customerForm.get('emailGroup.email')?.touched ||
-                    customerForm.get('emailGroup.email')?.dirty) &&
-                  (!customerForm.get('emailGroup.email')?.valid ||
-                    !customerForm.get('emailGroup')?.valid)
+                  getErrorMessages({ controlName: 'emailGroup.email' }) ||
+                  getErrorMessages({ controlName: 'emailGroup' })
               }"
             />
             <span class="invalid-feedback">
-              <span
-                *ngIf="customerForm.get('emailGroup.email')?.errors?.required"
-              >
-                Please enter your email address.
-              </span>
-              <span *ngIf="customerForm.get('emailGroup.email')?.errors?.email">
-                Please enter a valid email address.
-              </span>
+              {{ getErrorMessages({ controlName: "emailGroup.email" }) }}
             </span>
           </div>
         </div>
@@ -102,25 +93,18 @@
               formControlName="confirmEmail"
               [ngClass]="{
                 'is-invalid':
-                  (customerForm.get('emailGroup.confirmEmail')?.touched ||
-                    customerForm.get('emailGroup.confirmEmail')?.dirty) &&
-                  (!customerForm.get('emailGroup.confirmEmail')?.valid ||
-                    !customerForm.get('emailGroup')?.valid)
+                  getErrorMessages({
+                    controlName: 'emailGroup.confirmEmail'
+                  }) || getErrorMessages({ controlName: 'emailGroup' })
               }"
             />
             <span class="invalid-feedback">
-              <span
-                *ngIf="
-                  customerForm.get('emailGroup.confirmEmail')?.errors?.required
-                "
-              >
-                Please confirm your email address.
-              </span>
-              <span
-                *ngIf="customerForm.get('emailGroup')?.errors?.notMatchEmail"
-              >
-                Email and Confirm Email don't match.
-              </span>
+              {{
+                getErrorMessages({
+                  controlName: "emailGroup.confirmEmail"
+                })
+              }},
+              {{ getErrorMessages({ controlName: "emailGroup" }) }}
             </span>
           </div>
         </div>
@@ -135,19 +119,11 @@
             placeholder="Phone"
             formControlName="phone"
             [ngClass]="{
-              'is-invalid':
-                (customerForm.get('phone')?.touched ||
-                  customerForm.get('phone')?.dirty) &&
-                !customerForm.get('phone')?.valid
+              'is-invalid': getErrorMessages({ controlName: 'phone', minlength: 8 })
             }"
           />
           <span class="invalid-feedback">
-            <span *ngIf="customerForm.get('phone')?.errors?.required">
-              Please enter your phone.
-            </span>
-            <span *ngIf="customerForm.get('phone')?.errors?.minlength">
-              Phone number should be at least 8 digits.
-            </span>
+            {{ getErrorMessages({ controlName: "phone" }) }}
           </span>
         </div>
       </div>
@@ -162,7 +138,6 @@
                 type="radio"
                 formControlName="notification"
                 value="text"
-                (click)="setPhoneValidation('text')"
               />
               Phone
             </label>
@@ -174,7 +149,6 @@
                 type="radio"
                 formControlName="notification"
                 value="email"
-                (click)="setPhoneValidation('email')"
               />
               Email
             </label>

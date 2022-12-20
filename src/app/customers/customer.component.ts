@@ -11,6 +11,23 @@ import {
 
 import { Customer } from './customer';
 
+interface ValidationData {
+  controlName: string;
+  minlength?: number;
+  maxlength?: number;
+}
+const getValidationMessages = (
+  validationData: ValidationData
+): Record<string, string> => {
+  return {
+    required: `Please enter the ${validationData.controlName} `,
+    email: 'Please enter a valid email address ',
+    minlength: `The ${validationData.controlName} must be longer than ${validationData.minlength} `,
+    maxlength: `The ${validationData.controlName} must be less than ${validationData.maxlength} `,
+    notMatchEmail: `Email and Confirm Email don't match `,
+  };
+};
+
 const acceptableRating = (min: number, max: number): ValidatorFn => {
   return (c: AbstractControl): { [key: string]: boolean } | null => {
     if (
@@ -61,6 +78,10 @@ export class CustomerComponent implements OnInit {
       rating: [null, acceptableRating(1, 5)],
       sendCatalog: true,
     });
+
+    this.customerForm
+      .get('notification')
+      ?.valueChanges.subscribe((value) => this.setPhoneValidation(value));
   }
 
   save(): void {
@@ -89,5 +110,24 @@ export class CustomerComponent implements OnInit {
     }
 
     phoneControl?.updateValueAndValidity();
+  }
+
+  getErrorMessages(validationData: ValidationData) {
+    const cNames = validationData.controlName.split('.');
+    const control = this.customerForm.get(validationData.controlName);
+    console.log(validationData.controlName, control);
+    let errorMessages: string = '';
+    if (control?.errors && (control.dirty || control.touched))
+      errorMessages = Object.keys(control.errors)
+        .map(
+          (key) =>
+            getValidationMessages({
+              ...validationData,
+              controlName: cNames[cNames.length - 1],
+            })?.[key]
+        )
+        .join(', ');
+
+    return errorMessages;
   }
 }
