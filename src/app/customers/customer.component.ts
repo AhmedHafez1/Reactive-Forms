@@ -22,6 +22,17 @@ const acceptableRating = (min: number, max: number): ValidatorFn => {
     return null;
   };
 };
+
+const emailMatcher = (
+  c: AbstractControl
+): { [key: string]: boolean } | null => {
+  const emailControl = c.get('email');
+  const confirmEmailControl = c.get('confirmEmail');
+  if (emailControl?.pristine || confirmEmailControl?.pristine) return null;
+  if (emailControl?.value !== confirmEmailControl?.value)
+    return { notMatchEmail: true };
+  return null;
+};
 @Component({
   selector: 'app-customer',
   templateUrl: './customer.component.html',
@@ -37,7 +48,14 @@ export class CustomerComponent implements OnInit {
     this.customerForm = this.fb.group({
       firstName: ['', [Validators.required, Validators.minLength(3)]],
       lastName: ['', [Validators.required, Validators.maxLength(15)]],
-      email: ['', [Validators.required, Validators.email]],
+      emailGroup: this.fb.group(
+        {
+          email: ['', [Validators.required, Validators.email]],
+          confirmEmail: ['', [Validators.required, Validators.email]],
+        },
+        { validator: emailMatcher }
+      ),
+
       phone: '',
       notification: 'email',
       rating: [null, acceptableRating(1, 5)],
