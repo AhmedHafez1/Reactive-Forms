@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {
   AbstractControl,
+  FormArray,
   FormBuilder,
   FormControl,
   FormGroup,
@@ -78,11 +79,30 @@ export class CustomerComponent implements OnInit {
       notification: 'email',
       rating: [null, acceptableRating(1, 5)],
       sendCatalog: true,
+      addresses: this.fb.array([this.buildAddress(), this.buildAddress()]),
     });
 
     this.customerForm
       .get('notification')
       ?.valueChanges.subscribe((value) => this.setPhoneValidation(value));
+  }
+
+  buildAddress(): FormGroup {
+    return this.fb.group({
+      addressType: 'home',
+      street1: '',
+      street2: '',
+      city: '',
+      state: '',
+    });
+  }
+
+  get addresses(): FormArray {
+    return this.customerForm.get('addresses') as FormArray;
+  }
+
+  addAddress(): void {
+    this.addresses.push(this.buildAddress());
   }
 
   save(): void {
