@@ -16,7 +16,8 @@ interface ValidationData {
   minlength?: number;
   maxlength?: number;
 }
-const getValidationMessages = (
+
+const errorMessages = (
   validationData: ValidationData
 ): Record<string, string> => {
   return {
@@ -112,22 +113,23 @@ export class CustomerComponent implements OnInit {
     phoneControl?.updateValueAndValidity();
   }
 
-  getErrorMessages(validationData: ValidationData) {
-    const cNames = validationData.controlName.split('.');
+  getErrorMessages(validationData: ValidationData): string {
     const control = this.customerForm.get(validationData.controlName);
-    console.log(validationData.controlName, control);
-    let errorMessages: string = '';
+    const splittedNames = validationData.controlName.split('.');
+    const controlName = splittedNames[splittedNames.length - 1].toUpperCase();
+
+    let messages: string = '';
     if (control?.errors && (control.dirty || control.touched))
-      errorMessages = Object.keys(control.errors)
+      messages = Object.keys(control.errors)
         .map(
-          (key) =>
-            getValidationMessages({
+          (key: string) =>
+            errorMessages({
               ...validationData,
-              controlName: cNames[cNames.length - 1],
-            })?.[key]
+              controlName,
+            })[key]
         )
         .join(', ');
 
-    return errorMessages;
+    return messages;
   }
 }

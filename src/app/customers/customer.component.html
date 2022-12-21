@@ -119,11 +119,14 @@
             placeholder="Phone"
             formControlName="phone"
             [ngClass]="{
-              'is-invalid': getErrorMessages({ controlName: 'phone', minlength: 8 })
+              'is-invalid': getErrorMessages({
+                controlName: 'phone',
+                minlength: 8
+              })
             }"
           />
           <span class="invalid-feedback">
-            {{ getErrorMessages({ controlName: "phone" }) }}
+            {{ getErrorMessages({ controlName: "phone", minlength: 8 }) }}
           </span>
         </div>
       </div>
